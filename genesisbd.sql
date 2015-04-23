@@ -19,7 +19,7 @@ USE `segells`;
 CREATE TABLE IF NOT EXISTS `ad_es` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `any` int(11) NOT NULL,
-  `imatge` longblob NOT NULL,
+  `imatge` text NOT NULL,
   `yvert` varchar(10) DEFAULT NULL,
   `michel` varchar(10) DEFAULT NULL,
   `scott` varchar(10) DEFAULT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `ad_es` (
 CREATE TABLE IF NOT EXISTS `ad_fr` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `any` int(11) NOT NULL,
-  `imatge` longblob NOT NULL,
+  `imatge` text NOT NULL,
   `yvert` varchar(10) DEFAULT NULL,
   `michel` varchar(10) DEFAULT NULL,
   `scott` varchar(10) DEFAULT NULL,
