@@ -142,7 +142,6 @@ for ($data = 0; $data <= sizeof($array); $data++) {
 	$result = curl_exec($ch);
 	$error = curl_error($ch);
 	curl_close($ch); 
-
 	//preg_match_all("(<td class=\"bL bB maintd\">1931</td>(.*)</table>)siU", $result , $title);
 	preg_match_all("(<tr class=\"bddCouleurTimbre\">(.*)</table>)siU", $result , $title);//per a saber quantes imatges hi ha
     //var_dump($title); //var_dump dirà quantes imatges hi ha a la pàgina
