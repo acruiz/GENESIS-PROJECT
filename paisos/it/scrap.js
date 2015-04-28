@@ -64,7 +64,7 @@ function peticio(any) {
 		    	});
 		    	
 		    	descarregaEnBase64(imatgeUrl, function(data) {
-		    		ivalors.imatge = data;
+		    		valors.imatge = data;
 		    		var valorsPerInserir = [];
 		    		valorsPerInserir.push(parseInt(valors.any));
 		    		valorsPerInserir.push(valors.imatge);
