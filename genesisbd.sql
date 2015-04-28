@@ -15,48 +15,26 @@ CREATE DATABASE IF NOT EXISTS `segells` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `segells`;
 
 
--- Volcando estructura para tabla segells.ad_es
-CREATE TABLE IF NOT EXISTS `ad_es` (
+-- Volcando estructura para tabla segells.id_pais
+CREATE TABLE IF NOT EXISTS `id_pais` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `any` int(11) NOT NULL,
   `imatge` text NOT NULL,
-  `yvert` varchar(10) DEFAULT NULL,
-  `michel` varchar(10) DEFAULT NULL,
-  `scott` varchar(10) DEFAULT NULL,
-  `edifil` varchar(10) DEFAULT NULL,
-  `unificato` varchar(10) DEFAULT NULL,
-  `cob` varchar(10) DEFAULT NULL,
+  `yvert` text,
+  `michel` text,
+  `scott` text,
+  `edifil` text,
+  `unificato` text,
+  `cob` text,
   `id_pais` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_pais` (`id_pais`),
-  CONSTRAINT `FK_ad_es_pais` FOREIGN KEY (`id_pais`) REFERENCES `pais` (`id_pais`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='PAIS Andorra española. \r\n\r\nTabla donde guardará la información las imágenes en código binario, junto con el año, pais y demás.';
+  CONSTRAINT `id_pais_ibfk_1` FOREIGN KEY (`id_pais`) REFERENCES `pais` (`id_pais`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=376 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='PAIS Andorra española. \r\n\r\nTabla donde guardará la información las imágenes en código binario, junto con el año, pais y demás.';
 
--- Volcando datos para la tabla segells.ad_es: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `ad_es` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ad_es` ENABLE KEYS */;
-
-
--- Volcando estructura para tabla segells.ad_fr
-CREATE TABLE IF NOT EXISTS `ad_fr` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `any` int(11) NOT NULL,
-  `imatge` text NOT NULL,
-  `yvert` varchar(10) DEFAULT NULL,
-  `michel` varchar(10) DEFAULT NULL,
-  `scott` varchar(10) DEFAULT NULL,
-  `edifil` varchar(10) DEFAULT NULL,
-  `unificato` varchar(10) DEFAULT NULL,
-  `cob` varchar(10) DEFAULT NULL,
-  `id_pais` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_ad_fr_pais` (`id_pais`),
-  CONSTRAINT `FK_ad_fr_pais` FOREIGN KEY (`id_pais`) REFERENCES `pais` (`id_pais`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='PAIS Andorra francesa.\r\n\r\nTabla donde guardará la información las imágenes en código binario, junto con el año, pais y demás.';
-
--- Volcando datos para la tabla segells.ad_fr: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `ad_fr` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ad_fr` ENABLE KEYS */;
+-- Volcando datos para la tabla segells.id_pais: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `id_pais` DISABLE KEYS */;
+/*!40000 ALTER TABLE `id_pais` ENABLE KEYS */;
 
 
 -- Volcando estructura para tabla segells.pais
