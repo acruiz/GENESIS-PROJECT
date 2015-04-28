@@ -239,13 +239,12 @@ function inserta($inici,$final,$miurl,$classFilas,$tabla){
 $miurlOrigin_dd_de=donamiUrl($urlp,$url_dd_de,$classAnys);
 $miurlOrigin_de=donamiUrl($urlp,$url_de,$classAnys);
 
-//Descomentaremos para ir ejecutando e insertando
+//Desomentamos para ir ejecutando
 //inserta(0,20,$miurlOrigin_dd_de,$classFilas,'dd_de');
 //inserta(20,42,$miurlOrigin_dd_de,$classFilas,'dd_de');
 //inserta(0,20,$miurlOrigin_de,$classFilas,'de');
 //inserta(20,40,$miurlOrigin_de,$classFilas,'de');
 //inserta(40,56,$miurlOrigin_de,$classFilas,'de');
-
 
 ?>
 </html>
