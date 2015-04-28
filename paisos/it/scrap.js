@@ -12,9 +12,7 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-//ejecuta en cmd: node scrap.js
-
-//LO QUE HAY QUE CANVIAR
+//ejecuta: node scrap.js
 var idPais = "it"; 
 for (var i = 1843; i <= 1843; i++) {
 	peticio(i);
