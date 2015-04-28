@@ -20,9 +20,9 @@ $nomUsuari = "root";
 $password = "";
 $connexio = new PDO ('mysql:host=localhost;dbname=segells',$nomUsuari,$password);
 
-for ($i = 25; $i < 31; $i++) {
+for ($i = 0; $i < sizeof($anysFo); $i++) {
 	// http://localhost/segells/philatelie/basededonnees/index8cdf.html?p=fo&d=1975
-	$url = "http://localhost/segells/philatelie/basededonnees/".$anys[$i];
+	$url = "http://localhost/segells/philatelie/basededonnees/".$anysFo[$i];
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
