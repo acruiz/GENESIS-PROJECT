@@ -176,7 +176,6 @@ $img = $f[1];
 $img = file_get_contents($img);
 $img = base64_encode($img);
 
-
 $inserir = $bd->prepare('INSERT INTO es (any, imatge, yvert, michel, scott, edifil, id_pais) 
 	VALUES (:any, :imatge, :yvert, :michel, :scott, :edifil, "es")');
 
