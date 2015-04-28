@@ -1,0 +1,99 @@
+<?php
+$array = array(
+'indexb5fb.html?p=eh&amp;d=1924',
+'index24d4.html?p=eh&amp;d=1926',
+'index8931.html?p=eh&amp;d=1929',
+'index8a22.html?p=eh&amp;d=1931',
+'indexbb58.html?p=eh&amp;d=1941',
+'index2f9d.html?p=eh&amp;d=1943',
+'index691a.html?p=eh&amp;d=1950',
+'index3e4c.html?p=eh&amp;d=1951',
+'index54e8-2.html?p=eh&amp;d=1952',
+'index08c0.html?p=eh&amp;d=1953',
+'index6d9f.html?p=eh&amp;d=1954',
+'indexc7ed.html?p=eh&amp;d=1955',
+'index7e4c.html?p=eh&amp;d=1956',
+'index5cd9.html?p=eh&amp;d=1957',
+'indexa3da.html?p=eh&amp;d=1958',
+'index776e.html?p=eh&amp;d=1959',
+'index590e.html?p=eh&amp;d=1960',
+'index17dd.html?p=eh&amp;d=1961',
+'indexb3c5.html?p=eh&amp;d=1962',
+'index00ba.html?p=eh&amp;d=1963',
+'index97c7.html?p=eh&amp;d=1964',
+'indexa910.html?p=eh&amp;d=1965',
+'index0651.html?p=eh&amp;d=1966',
+'index0613.html?p=eh&amp;d=1967',
+'index28d1.html?p=eh&amp;d=1968',
+'index37ea.html?p=eh&amp;d=1969',
+'index7365.html?p=eh&amp;d=1970',
+'index9dd4.html?p=eh&amp;d=1971',
+'index22c6.html?p=eh&amp;d=1972',
+'indexf417.html?p=eh&amp;d=1973',
+'indexe45a.html?p=eh&amp;d=1974',
+'indexee37.html?p=eh&amp;d=1975'
+);
+
+$bd = new PDO('mysql:host=localhost;dbname=segells', "root", "");
+for ($data = 0; $data <= sizeof($array); $data++) {
+	$url = "http://localhost/segells/philatelie/basededonnees/".$array[$data];
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: es-es,en"));
+	curl_setopt($ch, CURLOPT_TIMEOUT, 100);
+	//curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$result = curl_exec($ch);
+	$error = curl_error($ch);
+	curl_close($ch); 
+
+	//preg_match_all("(<td class=\"bL bB maintd\">1931</td>(.*)</table>)siU", $result , $title);
+	preg_match_all("(<tr class=\"bddCouleurTimbre\">(.*)</table>)siU", $result , $title);//per a saber quantes imatges hi ha
+    //var_dump($title); //var_dump dirà quantes imatges hi ha a la pàgina
+	$num_segells = count($title[0]);
+	//echo $num_segells;
+
+
+/*$mysqli = new mysqli("domini", "user", "pass", "taula");//USAR PDO!!!!
+if ($mysqli->connect_errno) {
+    echo "Falla la conexió MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+}*/
+$dir ="";
+for ($x = 0; $x < $num_segells; $x++) {
+	for ($y = 0; $y <= 1000; $y++) {
+    $dir .= $title[0][$x][$y]; //guardo tota la url a dir
+} 
+//f = foto; a = any; p = pais; c = cataleg; y = Yvert-et-Tellier; e = Edifil; m = Michel; s = Scott;
+preg_match("(src='(.*)')siU", $dir, $f); //trec tot el que hi ha abans del http
+preg_match("(<td class=\"bL bB maintd\">(.*)</td>)siU", $dir, $a); //agafo l'any
+preg_match("(scans/(.*)/)siU", $dir, $p); //agafo el pais
+preg_match("(Yvert-et-Tellier</td><td align=\"right\">(.*?)</td>)", $dir, $y); //agafo el YT
+preg_match("(Edifil</td><td align=\"right\">(.*?)</td>)", $dir, $e); //agafo el Ed
+preg_match("(Michel</td><td align=\"right\">(.*?)</td>)", $dir, $m); //agafo el Mi
+preg_match("(Scott</td><td align=\"right\">(.*?)</td>)", $dir, $s); //agafo el SC
+//echo $p[1]."<br><br>";
+//echo $a[1]."<br><br>";
+//echo $f[1]."<br><br>";
+$pais = $p[1];
+$any = $a[1];
+$img = $f[1];
+$img = file_get_contents($img);
+$img = base64_encode($img);
+
+
+$inserir = $bd->prepare('INSERT INTO eh (any, imatge, yvert, michel, scott, edifil, id_pais) 
+	VALUES (:any, :imatge, :yvert, :michel, :scott, :edifil, "eh")');
+
+$inserir->bindParam(":any", $any);
+$inserir->bindParam(":imatge", $img);
+$inserir->bindParam(":yvert", $y[1]);
+$inserir->bindParam(":michel", $m[1]);
+$inserir->bindParam(":scott", $s[1]);
+$inserir->bindParam(":edifil", $e[1]);
+
+$inserir->execute();
+$dir = "";
+	}
+}
+?>
