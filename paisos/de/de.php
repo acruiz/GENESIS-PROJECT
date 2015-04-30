@@ -15,7 +15,23 @@ $urlp='http://localhost/genesis/christophemaetz/philatelie/basededonnees/';
 $url_dd_de='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index0205.html?p=dd-de';
 //URL de Allemagne(République Fédérale) --> Años (1949-2004) -->Referencias(2403) --> ID(de)
 $url_de='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index0deb.html?p=de';
+//URL de Bosnie-Herzégovine (République Serbe) --> Años (1992-2007) -->Referencias(469) --> ID(ba-srp)
+$url_ba_srp='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index51c0.html?p=ba-srp';
+//URL de Nations Unies (Genève) --> Años (1969-2004) -->Referencias(540) --> ID(onu-g)
+$url_onu_g='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index465f.html?p=onu-g';
+//URL de Nations Unies (Vienne) --> Años (1979-2005) -->Referencias(481) --> ID(onu-w)
+$url_onu_w='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index5226.html?p=onu-w';
+//URL de  Polynésie française --> Años (1958-2005) -->Referencias(1023) --> ID(pf)
+$url_pf='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index7021.html?p=pf';
+//URL de  Terres Australes et Antarctiques Françaises --> Años (1955-2005) -->Referencias(606) --> ID(tf-aq)
+$url_tf_aq='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index3440.html?p=tf-aq';
+//URL de  Slovénie --> Años (1991-2008) -->Referencias(860) --> ID(si)
+$url_si='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index2c71.html?p=si';
+//URL de République monastique du Mont Athos --> Años (2008-2011) -->Referencias(89) --> ID(gr-69)
+$url_gr_69='http://localhost/genesis/christophemaetz/philatelie/basededonnees/index69ee.html?p=gr-69';
+//Clase que contiene los años
 $classAnys='bddContenuOnglet bddContenuOnglet_annee';
+//Clase que contiene las categorias
 $classFilas='bdd';
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////FUNCIONES/////////////////////////////////////////////////
@@ -131,7 +147,19 @@ function donamiUrl($urlpri,$url,$classA){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //****Funcion que insertara en la base de datos segells, en la tabla especificada los datos del pais que en la url hace referencia****//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function inserta($inici,$final,$miurl,$classFilas,$tabla){
+//$inici -> numero que dira en que año empezar segun su posicion en la array de años (el primero (0), el segundo(1)...).
+//$final -> numero que dira en que año terminar segun su posicion en la array de años (el quinto(4), el sexto(5)....).
+//$miurl -> array que contiene todas las URL de cada año del pais.
+//$classFilas -> clase en donde esta la informacion de los sellos (para saber cuantos sellos hay).
+//$tabla -> nombre de la tabla en la base de datos segells.
+//$textPrimer -> nombre de la primera categoría.
+//$textSegon -> nombre de la segunda categoría.
+//$textTercer -> nombre de la tercera categoría.
+//$primerCamp -> nombre del primer campo de la tabla para insertar la primera categoria.
+//$segonCamp -> nombre del segundo campo de la tabla para insertar la segunda categoria.
+//$tercerCamp -> nombre del tercer campo de la tabla para insertar la tercera categoria.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function inserta($inici,$final,$miurl,$classFilas,$tabla,$textPrimer,$textSegon,$textTercer,$primerCamp,$segonCamp,$tercerCamp){
 	/////////////////CONNEXIO/////////////////
 	$host = 'localhost';
 	$username= 'root';
@@ -155,64 +183,98 @@ function inserta($inici,$final,$miurl,$classFilas,$tabla){
 			//Cogemos todo el texto que hay en las columnas de caracteristicas
 			//Como esta codificado en ISO lo decoedificamos a un sencillo Byte ISO(para poder leer ñ , acentos y caracteres, ya que sino salen caracteres raros)
 			$tots=utf8_decode($arrayComprova[$a]);
-			//Comprobamos si esta Michel
-			$ma=strpos(trim($tots), "Michel");
-			//Comprobamos si esta Yvert
-			$yv=strpos(trim($tots), "Yvert-et-Tellier");
-			//Si esta Michel
-			if($ma!==false){
-				//Si esta Yvert
-				if($yv!==false){
-					//Almacenamos a Michel, que sera desde el principi, hasta Yvert(ya que Yvert esta en la segunda posicion)
-					$michel=substr(trim($tots), 0, $yv);
-					echo "<br>".$michel."<br>";
-					//Comprobamos si esta Scott apartir de Yvert(no desde el principio de la cadena, osea Michel se olvida)
-					$sc=strpos(substr(trim($tots), $yv), "Scott");
-					//Si esta Scott
-					if($sc!==false){
-						//ALmacenamos a Yvert
-						$yvert=substr(trim($tots), $yv,$sc);
-						echo $yvert."<br>";
-						//Almacenamos a Scott a partir de la posicion de Yvert
-						$scott=substr(substr(trim($tots), $yv), $sc);
-						echo $scott."<br>";
-					}
-					//Si no esta Scott
-					else{
-						//ALmacenamos a Yvert
-						$yvert=substr(trim($tots), $yv);
-						echo $yvert."<br>";
-						$scott="Scott";
-						echo $scott."<br>";
-					}
-				}
-				//Si no esta Yvert
-				else{
-					//Comprobamos si esta Scott apartir del principio de la cadena
-					$sc=strpos(trim($tots), "Scott");
-					$yvert="Yvert-et-Tellier";
-					//Si esta Scott
-					if($sc!==false){
-						//Almacenamos a Michel, que sera desde el principi, hasta Yvert(ya que Yvert esta en la segunda posicion)
-						$michel=substr(trim($tots), 0, $sc);
-						echo $michel."<br>";
-						$scott=substr(trim($tots), $sc);
-						echo $scott."<br>";
-					}
-					//Si no esta Scott
-					else{
-						$michel=substr(trim($tots), 0);
-						$scott="Scott";
-						echo $michel."<br>";
-						echo $scott."<br>";
-					}
-					echo $yvert;
-				}
-			}
-			else{
-				echo "NO HAY MICHEL****ALGO PASA CON MICHEEL! (-.-) MICHEL SIEMPRE ESTA! :'O";
-			}
+			//Comprobamos si esta la primera categoria
+			$pC=strpos(trim($tots), $textPrimer);
+			//Comprobamos si esta la segunda categoria
+			$sC=strpos(trim($tots), $textSegon);
 			
+			//Si esta la primera categoria
+			if($pC!==false){
+				//Si esta la segunda categoria y la primera
+				if($sC!==false){
+					//Almacenamos a la primera categoria, que sera desde el principi, hasta la segunda categoria
+					$primeraCat=substr(trim($tots), 0, $sC);
+					echo "<br>".$primeraCat."<br>";
+					//Comprobamos si esta la tercera categoria apartir de la segunda
+					$tC=strpos(substr(trim($tots), $sC), $textTercer);
+					//Si esta la tercera y la primera y la segunda
+					if($tC!==false){
+						//Almacenamos la segunda
+						$segundaCat=substr(trim($tots), $sC,$tC);
+						echo $segundaCat."<br>";
+						//Almacenamos a la tercera categoria a partir de la segunda
+						$terceraCat=substr(substr(trim($tots), $sC), $tC);
+						echo $terceraCat."<br>";
+					}
+					//Si no esta la tercera categoria y si esta la primera y la segunda
+					else{
+						//Almacenamos la segunda
+						$segundaCat=substr(trim($tots), $sC);
+						echo $segundaCat."<br>";
+						$terceraCat=$textTercer;
+						echo $terceraCat."<br>";
+					}
+				}
+				//Si no esta la segunda categoria y si la primera
+				else{
+					$segundaCat=$textSegon;
+					//Comprobamos si esta la tercera categoria a partir de la primera
+					$tC=strpos(substr(trim($tots), $pC), $textTercer);
+					//Si esta la tercera categoria y la primera y no la segunda
+					if($tC!==false){
+						$primeraCat=substr(trim($tots), 0, $tC);
+						echo "<br>".$primeraCat."<br>";
+						$terceraCat=substr(substr(trim($tots), $pC), $tC);
+						echo $terceraCat."<br>";
+					}
+					//Si no esta la tercera ni la segunda y si la primera
+					else{
+						$primeraCat=$tots;
+						echo $segundaCat."<br>";
+						$terceraCat=$textTercer;
+						echo $terceraCat."<br>";
+					}
+					echo $segundaCat;
+				}
+			}
+			//Si no esta la primera categoria
+			else{
+				$primeraCat=$textPrimer;
+				$tC=strpos(substr(trim($tots), $sC), $textTercer);
+				//Si esta la segunda y no esta la primera
+				if($sC!==false){
+					//Si esta la tercera y la segunda y no esta la primera
+					if($tC!==false){
+						$segundaCat=substr(trim($tots), 0, $tC);
+						echo "<br>".$segundaCat."<br>";
+						$terceraCat=substr(trim($tots), $tC);
+						echo $terceraCat."<br>";
+					}
+					//Si no esta la primera ni la tercera y si la segunda
+					else{
+						$segundaCat=$tots;
+						echo "<br>".$segundaCat."<br>";
+						$terceraCat=$textTercer;
+						echo $terceraCat."<br>";
+					}
+				}
+				//Si no esta la segunda categoria ni la primera
+				else{
+					$segundaCat=$textSegon;
+					//Si esta la tercera y no esta ni la segunda ni la primera
+					if($tC!==false){
+						$terceraCat=$tots;
+						echo $terceraCat."<br>";
+					}
+					//Si no esta la tercera ni la segunda
+					else{
+						$terceraCat=$textTercer;
+						echo $terceraCat."<br>";
+					}
+				}
+				echo $segundaCat;
+			}
+				
 			//Para las imagenes
 			$image[$i][$a] = $arrayImgs[$m][$a];
 			// Read image path, convert to base64 encoding
@@ -221,11 +283,15 @@ function inserta($inici,$final,$miurl,$classFilas,$tabla){
 			$src[$i][$a] = 'data: '.base64_decode($image[$i][$a]).';base64,'.$imageData[$i][$a];
 			echo $src[$i][$a]."<br>";
 
-			$michel=substr($michel, 6);
-			$scott=substr($scott, 5);
-			$yvert=substr($yvert, 16);
+			$numPrimer=strlen($textPrimer);
+			$numSegon=strlen($textSegon);
+			$numTercer=strlen($textTercer);
+			$primeraCat=substr($primeraCat, $numPrimer);
+			$segundaCat=substr($segundaCat, $numSegon);
+			$terceraCat=substr($terceraCat, $numTercer);
+			
 
-			$sql = "INSERT INTO ".$tabla."(id_pais,any,imatge,michel,scott,yvert) VALUES ('".$tabla."','".(int)$arrayAnys[$i][$a]."','".$src[$i][$a]."','".$michel."','".$scott."','".$yvert."')";
+			$sql = "INSERT INTO ".$tabla."(id_pais,any,imatge,".$primerCamp.",".$segonCamp.",".$tercerCamp.") VALUES ('".$tabla."','".(int)$arrayAnys[$i][$a]."','".$src[$i][$a]."','".$primeraCat."','".$segundaCat."','".$terceraCat."')";
 			$connexio -> query($sql);
 		}
 	}
@@ -236,15 +302,39 @@ function inserta($inici,$final,$miurl,$classFilas,$tabla){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////LLAMADAS//////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////A cada país le pertenece una array que contiene las URLs de los años///////////
 $miurlOrigin_dd_de=donamiUrl($urlp,$url_dd_de,$classAnys);
 $miurlOrigin_de=donamiUrl($urlp,$url_de,$classAnys);
+$miurlOrigin_ba_srp=donamiUrl($urlp,$url_ba_srp,$classAnys);
+$miurlOrigin_onu_g=donamiUrl($urlp,$url_onu_g,$classAnys);
+$miurlOrigin_onu_w=donamiUrl($urlp,$url_onu_w,$classAnys);
+$miurlOrigin_pf=donamiUrl($urlp,$url_pf,$classAnys);
+$miurlOrigin_tf_aq=donamiUrl($urlp,$url_tf_aq,$classAnys);
+$miurlOrigin_si=donamiUrl($urlp,$url_si,$classAnys);
+$miurlOrigin_gr_69=donamiUrl($urlp,$url_gr_69,$classAnys);
 
-//Decomentar para ir ejecutando
-//inserta(0,20,$miurlOrigin_dd_de,$classFilas,'dd_de');
-//inserta(20,42,$miurlOrigin_dd_de,$classFilas,'dd_de');
-//inserta(0,20,$miurlOrigin_de,$classFilas,'de');
-//inserta(20,40,$miurlOrigin_de,$classFilas,'de');
-//inserta(40,56,$miurlOrigin_de,$classFilas,'de');
 
+///////////Descomentar cada linea para mostrar e insertar los datos a la base de datos segells/////////
+/*********************************Allemagne(République Démocretique)*********************************/
+//inserta(0,42,$miurlOrigin_dd_de,$classFilas,'dd_de',"Michel","Yvert-et-Tellier","Scott","michel","yvert","scott");
+/*********************************Allemagne(République Fédérale)*********************************/
+//inserta(0,56,$miurlOrigin_de,$classFilas,'de',"Michel","Yvert-et-Tellier","Scott","michel","yvert","scott");
+/*********************************Bosnie-Herzégovine (République Serbe)*********************************/
+//inserta(0,15,$miurlOrigin_ba_srp,$classFilas,'ba_srp',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+/********************************* Nations Unies (Genève) *********************************/
+inserta(0,36,$miurlOrigin_onu_g,$classFilas,'onu_g',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+/*********************************Nations Unies (Vienne)*********************************/
+//inserta(0,27,$miurlOrigin_onu_w,$classFilas,'onu_w',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+/*********************************Polynésie française *********************************/
+//inserta(0,47,$miurlOrigin_pf,$classFilas,'pf',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+/*********************************Terres Australes et Antarctiques Françaises *********************************/
+//inserta(0,49,$miurlOrigin_tf_aq,$classFilas,'tf_aq',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+/*********************************Slovénie*********************************/
+//inserta(0,17,$miurlOrigin_si,$classFilas,'si',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+/*********************************République monastique du Mont Athos*********************************/
+//inserta(0,4,$miurlOrigin_gr_69,$classFilas,'gr_69',"Yvert-et-Tellier","Michel","Scott","yvert","michel","scott");
+
+
+	
 ?>
 </html>
